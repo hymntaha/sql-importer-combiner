@@ -11,15 +11,20 @@ def db_connection():
 def insert_csv_to_sql():
     db_connection()
     connection = db_connection()
-    csv_df = pd.read_excel('tblProductNutrition.xlsx')
-    pd.set_option('display.max_colwidth', -1)
-    csv_df.index = csv_df.index + 1
+    csv_df1 = pd.read_csv('out6.csv')
+    csv_df2 = pd.read_excel('tblProductAllergenStatements.xlsx')
+    # pd.set_option('display.max_colwidth', -1)
+    # csv_df.index = csv_df.index + 1
+    # products-categories-claims-description-images-ingredients-measurement-serving_size-allergen
+
     # print(csv_df['unqProductDescriptionId'],csv_df['unqProductId'],csv_df['vchProductDescription'],csv_df['vchAdditionalDescription'],csv_df['vchShortDescription'],csv_df['vchServingSuggestions'],csv_df['vchPreparation'],csv_df['vchStorage'],csv_df['intShelfLifeDays'])
     # print(csv_df['vchPreparation'])
     # csv_df.to_sql(name='product_descriptions', con=con, if_exists='replace', index=False)
+    merged = csv_df1.merge(csv_df2, on='unqProductId', how='outer')
+    merged.to_csv('out7.csv', sep=',')
 
-    with connection.connect() as conn, conn.begin():
-        csv_df.to_sql('product_nutrition', conn, if_exists='replace')
+    # with connection.connect() as conn, conn.begin():
+    #     csv_df.to_sql('product_nutrition', conn, if_exists='replace')
 
     print('Thank you for your patience! Importer is completed')
 
@@ -60,12 +65,12 @@ def merge_two_tables_with_foreign_key():
     # csv_df.to_sql(name='product_descriptions', con=con, if_exists='replace', index=False)
 
     with connection.connect() as conn, conn.begin():
-        df.to_sql('recipes_test', conn, if_exists='replace')
+        df.to_sql('', conn, if_exists='replace')
 
     print('Thank you for your patience! Importer is completed')
 
-# insert_csv_to_sql()
-merge_two_tables_with_foreign_key()
+insert_csv_to_sql()
+# merge_two_tables_with_foreign_key()
 
 # Merges:
 # Product-claims
